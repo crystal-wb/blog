@@ -1,0 +1,49 @@
+Pretty Print, a new way to view data listed rather than clumped together
+pp post.comments
+
+two ways to add a foreign key
+bin/rails generate migration AddPostToComments post_id:integer:index
+bin/rails generate migration AddPostToComments post:references
+
+how to view the migration file names in the terminal
+ls db/migrate
+
+how to generate a join table migration for a many_to_many association
+bin/rails g migration CreateJoinTableUsersForums users forums
+it will have an index going both ways
+def change
+  create_join_table :users, :forums do |t|
+    t.index [:user_id, :forum_id]
+    t.index [:forum_id, :user_id]
+  end
+end
+they will be commented out so uncomment them
+add the associations
+class Users < ApplicationRecord
+  has_and_belongs_to_many :forums
+end
+class Forum < ApplicationRecord
+  has_and_belongs_to_many :users
+end
+you can create join table objects by doing this
+user.forums << Forum.last
+
+bin/rails g model Subscription months:integer subscriber_id:integer magazine_id:integer
+class Subscription < ApplicationRecord
+  belongs_to :subscriber
+  belongs_to :magazine
+end
+class Subscriber < ApplicationRecord
+  has_many :subscriptions
+  has_many :magazines, through: :subscriptions
+end
+class Magazine < ApplicationRecord
+  has_many :subscriptions
+  has_many :subscribers, through: :subscriptions
+end
+
+how to create a has_one association
+bin/rails g model Profile user:references twitter:string github:string
+Class Users < ApplicationRecord
+  has_one :profile
+end
