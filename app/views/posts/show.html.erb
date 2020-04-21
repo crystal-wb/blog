@@ -11,8 +11,11 @@
 </p>
 
 <div class="comments">
-  <h1>Comments</h1>
-  <%= render @post.comments %>
+  <% if @post.comments.present? %>
+    <h1>Comments</h1>
+    <%= render @post.comments %>
+  <% end %>
+
   <%#= render partial: "comments/comment", collection: @post.comments %>
   <%# <%= render partial: "comments/comment", collection: @post.comments, as: :comment %>
   <%# <% @post.comments.each do |comment| %>

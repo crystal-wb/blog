@@ -47,3 +47,40 @@ bin/rails g model Profile user:references twitter:string github:string
 Class Users < ApplicationRecord
   has_one :profile
 end
+
+polymorphic
+bin/rails g scaffold Movie title:string duration:integer
+bin/rails g scaffold Show title:string episodes:integer
+bin/rails g scaffold Actor name:string
+bin/rails g migration AddProductionToActor production_id:integer production_type:string
+alternatively
+bin/rails g migration AddProductionToActor production:references{polymorphic}
+
+add associations
+class Movie < ApplicationRecord
+  has_many :actors, as: :production
+end
+class Show < ApplicationRecord
+  has_many :actors, as: :production
+end
+
+class Actor < ApplicationRecord
+  belongs_to :production, polymorphic: true
+end
+Show.first.actors
+Actor.first.production
+Movie.first.actors
+
+destroying without orphans
+class Show < ApplicationRecord
+  has_many :actors, as: :production, dependent: :destroy
+end
+class Movie < ApplicationRecord
+  has_many :actors, as: :production, dependent: :destroy
+end
+
+use association to check if exists
+post = Post.create(title: "Newest post")
+Post.last.comments
+Post.last.comments.empty? # => true
+Post.last.comments.present? # => false
