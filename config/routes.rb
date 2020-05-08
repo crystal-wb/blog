@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :customers
   get 'pages/index'
 
   resources :posts do
